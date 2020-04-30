@@ -96,10 +96,46 @@ var connection = mysql.createConnection({
                             console.table(response);
                             employeeQ();
                         })
-                    }    
-                    )
+                    })
                 })
-                )
+            )
+                break;
+
+            case "View Departments":
+                connection.query("SELECT * FROM department", function(err, response) {
+                    if (err) throw err;
+                    console.table(response);
+                    employeeQ();
+                });
+                break;
+
+            case "View Roles":
+                connection.query("SELECT * FROM roles", function(err, response) {
+                    if (err) throw err;
+                    console.table(response);
+                    employeeQ();
+                });
+                break;  
+            
+            case "View Employees":
+                connection.query("SELECT * FROM employee", function(err, response) {
+                    if (err) throw err;
+                    console.table(response);
+                    employeeQ();
+                });
+                break;     
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
           }
       })
   }
