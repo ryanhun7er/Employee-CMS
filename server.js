@@ -115,7 +115,7 @@ const connection = mysql.createConnection({
             case "Add Employee":
                 connection.query("SELECT * FROM roles", function(err, response) {
                     if(err) throw err;               }
-                    inquirer.prompt([
+                    ,inquirer.prompt([
                     {
                         type: "input",
                         name: "first_name",
@@ -132,7 +132,7 @@ const connection = mysql.createConnection({
                         type: "list",
                         name: "role_id",
                         message: "What is the employee's role?",
-                        choices: () => response.map(roles => `${roles.id} ${roles.title}`)
+                        choices: () => roles.map(roles => `${roles.id} ${roles.title}`)
                     },
 
                     {
