@@ -87,7 +87,7 @@ const connection = mysql.createConnection({
                             name: "dept_id",
                             type: "list",
                             message: "Select the department for this role",
-                            choices: () => response.map(department => `${department.dept_name}`)
+                            choices: () => response.map(department => `${department.id} ${department.dept_name}`)
 
                         }
                     ]).then(answer => {
@@ -95,7 +95,7 @@ const connection = mysql.createConnection({
                         {
                             title: answer.title,
                             salary: answer.salary,
-                            dept_id: answer.department_id
+                            dept_id: parseInt(answer.dept_id)
                         },
                         function(err) {
                             if(err) throw err;
@@ -137,14 +137,14 @@ const connection = mysql.createConnection({
                         type: "list",
                         name: "role_id",
                         message: "What is the employee's role?",
-                        choices: () => res1.map(roles => `${roles.title}`)
+                        choices: () => res1.map(roles => `${roles.id} ${roles.title}`)
                     },
 
                     {
                         type: "list",
                         name: "manager_id",
                         message: "Who is the employee's Manager?",
-                        choices: () => res2.map(employee => `${employee.first_name} ${employee.last_name}`)
+                        choices: () => res2.map(employee => `${employee.id} ${employee.first_name} ${employee.last_name}`)
                     }
                 
                 ])
