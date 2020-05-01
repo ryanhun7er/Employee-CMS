@@ -24,7 +24,7 @@ const connection = mysql.createConnection({
 
   function employeeQ() {
       inquirer.prompt({
-          name: "choice1",
+          name: "select",
           type: "list",
           message: "Select from the options below:",
           choices: [
@@ -38,8 +38,8 @@ const connection = mysql.createConnection({
             "Exit"
           ]
       }).then(response => {
-          const selection = response.choice1;
-          switch(selection) {
+          
+          switch(response.select) {
             
             //add department
             case "Add Department":
@@ -85,9 +85,9 @@ const connection = mysql.createConnection({
 
                         {
                             name: "dept_id",
-                            type: "input",
+                            type: "list",
                             message: "Select the department for this role",
-                            choices: () => response.map(department => `${department.id} ${department.name}`)
+                            choices: () => response.map(department => `${department.dept_name}`)
 
                         }
                     ]).then(answer => {
@@ -113,9 +113,14 @@ const connection = mysql.createConnection({
 
             //add employee
             case "Add Employee":
-                connection.query("SELECT * FROM roles", function(err, response) {
-                    if(err) throw err;               }
-                    ,inquirer.prompt([
+                connection.query("SELECT * FROM roles", 
+                function(err, res1) {
+                    if(err) throw err; 
+                connection.query("SELECT * FROM employee",
+                function(err, res2) {
+                    if(err) throw err;
+                           
+                    inquirer.prompt([
                     {
                         type: "input",
                         name: "first_name",
@@ -132,14 +137,14 @@ const connection = mysql.createConnection({
                         type: "list",
                         name: "role_id",
                         message: "What is the employee's role?",
-                        choices: () => roles.map(roles => `${roles.id} ${roles.title}`)
+                        choices: () => res1.map(roles => `${roles.title}`)
                     },
 
                     {
                         type: "list",
                         name: "manager_id",
                         message: "Who is the employee's Manager?",
-                        choices: () => employee.map(employee => `${employee.id} ${employee.name}`)
+                        choices: () => res2.map(employee => `${employee.first_name} ${employee.last_name}`)
                     }
                 
                 ])
@@ -160,11 +165,14 @@ const connection = mysql.createConnection({
                             console.table(response);
                             employeeQ();
                         
+                        
                         })
                     })
                 })
-            )
-            ;
+            })
+        });
+            
+            
             break;
 
             case "View Departments":
@@ -193,19 +201,7 @@ const connection = mysql.createConnection({
           
             case "Finish":
                 connection.end();
-                    break;
-                    default: 
-                    break;
-          
-          
-          
-          
-          
-          
-          
-          
-          
-          
+                
           }
       })
   }
