@@ -9,7 +9,10 @@
 * This application will allow you to add, update, and view Employees
 
 ## Table of Contents
-*  1. Intallation 2. Instructions 3. License 4. Contributors 
+1. Intallation 
+2. Instructions 
+3. License 
+4. Contributors 
 
 ## Installation
 * Clone the repo. Copy files schema and seed files into your MySQL.
