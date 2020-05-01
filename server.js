@@ -1,6 +1,7 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql");
 const cTable = require("console.table");
+const CFonts = require('cfonts');
 require('dotenv').config();
 
 //set up connection to MySQL
@@ -19,6 +20,23 @@ const connection = mysql.createConnection({
     console.log("Successfully connected as id " + connection.threadId);
     employeeQ();
   });
+
+  //add a fancy logo
+  CFonts.say('Employee Management System', {
+    font: 'chrome',              
+    align: 'center',              
+    colors: 'default',         
+    background: 'transparent',  
+    letterSpacing: 1,          
+    lineHeight: 1,             
+    space: true,              
+    maxLength: '0',             
+    gradient: false,            
+    independentGradient: false, 
+    transitionGradient: false,  
+    env: 'node'                 
+});
+
 
   //function for asking questions
 
@@ -43,8 +61,7 @@ const connection = mysql.createConnection({
             
             //add department
             case "Add Department":
-                connection.query("SELECT * FROM department", function(err, response) {
-                    if(err) throw err;
+
                     inquirer.prompt([
                         {
                             type: "input",
@@ -54,15 +71,20 @@ const connection = mysql.createConnection({
                     ]).then(answer => {
                         connection.query("INSERT INTO department SET ?",
                         {
-                            name: answer.dept_name
+                            dept_name: answer.dept_name
                         },
+                        function (err) {
+                            if(err) throw err;
+                            console.log("Successfully added new department");
+                        
                         connection.query("SELECT * FROM department", function(err, response) {
                             if(err) throw err;
                             console.table(response);
                             employeeQ();
-                        }))
+                        })
                     })
                 });
+                
                 break;
             
             //add roles
