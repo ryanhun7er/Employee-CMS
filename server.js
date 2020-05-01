@@ -173,6 +173,42 @@ const connection = mysql.createConnection({
         });
             break;
 
+            //update employee
+            case "Update Employee":
+                connection.query("SELECT * FROM roles", 
+                function(err, res1) {
+                    if(err) throw err; 
+                connection.query("SELECT * FROM employee",
+                function(err, res2) {
+                    if(err) throw err;
+                    inquirer.prompt([
+                        {
+                            name: "emp",
+                            type: "list",
+                            message: "Which employee would you like to update?",
+                            choices: () => res2.map(employee => `${employee.id} ${employee.first_name} ${employee.last_name}`)
+                        },
+
+                        {
+                            name: "role_id",
+                            type: "list",
+                            message: "What is the employee's new role?",
+                            choices: () => res1.map(roles => `${roles.id} ${roles.title}`)
+                        }
+                    ]).then(answer => {
+                        connection.query("UPDATE employee SET role_id = ? WHERE id = ?",
+                        [answer.role_id.slice(0,1), answer.emp.slice(0,1)], function(err, response) {
+                            if(err) throw err;
+                            console.log(`Successfully updated role for:${answer.emp.slice(1,50)} to${answer.role_id.slice(1,50)}`);
+                            
+                            employeeQ();
+                        
+                        })
+                    })
+                })
+            });
+            break;
+
             case "View Departments":
                 connection.query("SELECT * FROM department", function(err, response) {
                     if (err) throw err;
@@ -196,30 +232,7 @@ const connection = mysql.createConnection({
                     employeeQ();
                 });
                 break;
-                
-            case "Update Employee":
-                connection.query("SELECT * FROM roles", 
-                function(err, res1) {
-                    if(err) throw err; 
-                connection.query("SELECT * FROM employee",
-                function(err, res2) {
-                    if(err) throw err;
-                    inquirer.prompt([
-                        {
-                            name: "emp",
-                            type: "list",
-                            message: "Which employee would you like to update?",
-                            choices: () => res2.map(employee => `${employee.first_name} ${employee.last_name}`)
-                        },
 
-                        {
-                            type: "role",
-                            name: "role_id",
-                            message: "What is the employee's new role?",
-                            choices: () => res1.map(roles => `${roles.title}`)
-                        }
-                    ])
-                })
           
             case "Finish":
                 default:
@@ -227,4 +240,4 @@ const connection = mysql.createConnection({
                 
           }
       })
-  }
+  };
